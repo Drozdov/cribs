@@ -1,0 +1,13 @@
+digraph g {
+A0 -> A1 [label = own sides]
+A0 -> A2 [label = Dancer]
+A2 -> A3 [label = +]
+A3 -> A4 [label = Dancer]
+A2 -> A2 [label = Dancer]
+A2 -> A5 [label = dance]
+A5 -> A6 [label = Figure]
+A2 -> A6 [label = Figure]
+A0 -> A5 [label = dance]
+A0 -> A7 [label = opposite sides]
+A0 -> A6 [label = Figure]
+}

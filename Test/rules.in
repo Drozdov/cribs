@@ -1,0 +1,4 @@
+"own sides" -> Parameters;
+"opposite sides" -> Parameters{sideGetter = GetSide{isOwn = 0}};
+dancers:Dancer+ "+" dancer:Dancer -> dancers dancer;
+d:Dancer* "dance"? f:Figure -> InitFigure { d ? dancers = d; figure = f; };

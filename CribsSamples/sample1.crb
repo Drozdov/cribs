@@ -1,0 +1,106 @@
+Figure ReelOf3 {
+	name	= "Reel of 3";
+	bars	= 8;
+	area	= {x = 4; y = 2};
+	axis	= {x = 0; y = 1; dir = 0}; // this should be used when synchronization to men's/lady's side
+	1st		= Dancer{name = "1st"; x = 1; y = 1; dir = 45};
+	3rd		= Dancer{name = "2nd"; x = 2; y = 1; dir = -135};
+	3rd		= Dancer{name = "3rd"; x = 3; y = 1; dir = 135};
+	leaders = 1st;
+	dancers	= 1st + 2nd + 3rd;
+}
+<
+	1-2: ell{1st.name, 1, 1, 2, 1, -45), ell}2nd.name, 2, 1, 1, 1, 90), ell(3rd.name, 3, 1, 2, 1, -135);
+	3-4: ell(1st.name, 2, 1, 3, 1, 90), ell(2nd.name, 1, 1, 2, 1, -45), ell(3rd.name, 2, 1, 1, 1, 90);
+	5-6: ell(1st.name, 3, 1, 2, 1, -135), ell(2nd.name, 2, 1, 3, 1, 90), ell(3rd.name, 1, 1, 2, 1, -45);
+	7-8: ell(1st.name, 2, 1, 1, 1, 90), ell(2nd.name, 3, 1, 2, 1, -135), ell(3rd.name, 2, 1, 3, 1, 90);
+>
+
+Dance {
+	currentFigure;
+	currentDancers;
+	allDancers;
+	parameters;
+}
+
+Set ParallelSet {
+
+	Dancer Man {
+		ownSide = {x = 0; y = 1; dir = 0};
+		oppositeSide = {x = 0; y = 2; dir = 0};
+		x; // to be overridden
+		partner; // to be overridden
+		y = 1;
+		dir = 90;
+	};
+		
+	Dancer Lady {
+		ownSide = {x = 0; y = 2; dir = 0};
+		oppositeSide = {x = 0; y = 1; dir = 0};
+		x; // to be overridden
+		partner; // to be overridden
+		y = 2;
+		dir = -90;
+	};
+	
+	tmp = Partner{Name = "Temporary"};
+	
+	1M = Man{name = "1M", x = 1, partner = tmp};
+	1L = Lady{name = "1L", x = 1, partner = tmp};
+	// and so on ...
+	
+	Function MakePartners
+	{
+		man;
+		lady;
+		man.partner = lady;
+		lady.partner = man;
+		result = man + lady;
+	};
+	
+	1s = call MakePartners{man = 1M, lady = 1L};
+	// and so on ...
+	
+	dancers = firstMan + firstLady; // and so on ...
+	
+	mensSide = firstMan.ownSide;
+	ladiesSide = firstLady.ownSide;
+	
+	dance; // is defined from outside
+	
+	// functions
+	Function GetSide
+	{
+		isOwn;
+		dancer;
+		result = isOwn ? dancer.ownSide : dancer.oppositeSide;	
+	};
+	
+	Function GetMensSide { result = mensSide; };
+	Function GetLadiesSide { result = ladiesSide; };
+	Function InitFigure { dance; figure; dancers; dance.currentDancers = dancers; dance.currentFigure = figure; };
+	
+	Function GetCorner { native = 1; dancer; dancers; cornerId; };
+	Function Commit { native = 1; };
+	
+	rules (
+		"own sides" -> Parameters{sideGetter = GetSide{isOwn = 1}};
+		"opposite sides" -> Parameters{sideGetter = GetSide{isOwn = 0}};
+		"m[ae]ns side" -> Parameters{sideGetter = GetMensSide};
+		"ladies side" -> Parameters{sideGetter = GetLadiesSide};
+		
+		"1st corner" -> Parameters{dancersGetter = GetCorner{dancers = dance.allDancers, cornerId = 1}};
+		"2nd corner" -> Parameters{dancersGetter = GetCorner{dancers = dance.allDancers, cornerId = 2}};
+		"3rd corner" -> Parameters{dancersGetter = GetCorner{dancers = dance.allDancers, cornerId = 3}};
+		"4th corner" -> Parameters{dancersGetter = GetCorner{dancers = dance.allDancers, cornerId = 4}};
+	
+		dancers:Dancer+ "+" dancer:Dancer -> dancers dancer;
+	
+		(d:Dancer+)? "dance"? f:Figure -> InitFigure { d ? dancers = d; figure = f; };
+		"[\\.,&]" -> Commit;
+	);
+	
+	grammar = MainGrammar;
+}
+
+
