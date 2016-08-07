@@ -1,0 +1,13 @@
+digraph g {
+A0 -> A1 [label = "_EPS"]
+A1 -> A2 [label = "dancers_BEGIN"]
+A2 -> A3 [label = "Dancer"]
+A3 -> A4 [label = "dancers_END"]
+A4 -> A5 [label = "_EPS"]
+A5 -> A6 [label = "+"]
+A6 -> A7 [label = "_EPS"]
+A7 -> A8 [label = "dancer_BEGIN"]
+A8 -> A9 [label = "Dancer"]
+A9 -> B0 [label = "dancer_END"]
+A3 -> A2 [label = "_EPS"]
+}

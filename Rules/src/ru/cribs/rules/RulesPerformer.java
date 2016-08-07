@@ -5,9 +5,8 @@ import java.util.List;
 
 import org.antlr.v4.runtime.tree.ParseTree;
 
-import ru.cribs.automaton.AutomatonData;
-import ru.cribs.automaton.Rule;
-import ru.cribs.automaton.RuleDataAutomaton;
+import ru.cribs.automaton.RuleData;
+import ru.cribs.automaton.Chain;
 import ru.cribs.rules.RulesParser.ElementLeftContext;
 import ru.cribs.rules.RulesParser.ElementRightContext;
 import ru.cribs.rules.RulesParser.ElementsLeftContext;
@@ -17,28 +16,28 @@ import ru.cribs.rules.RulesParser.SimpleElementLeftContext;
 import ru.cribs.rules.RulesParser.SimpleRuleContext;
 import ru.cribs.rules.RulesParser.StringLiteralContext;
 
-public class RulesPerformer extends RulesBaseVisitor<Rule>
+public class RulesPerformer extends RulesBaseVisitor<Chain>
 {
 	
-	private final List<Rule> rules = new ArrayList<>();
+	private final List<Chain> rules = new ArrayList<>();
 
 	@Override
-	public Rule visitStringLiteral(StringLiteralContext ctx) {
+	public Chain visitStringLiteral(StringLiteralContext ctx) {
 		String name = ctx.getText();
 		name = name.substring(1, name.length() - 1);
-		return new Rule(new RuleDataAutomaton(new AutomatonData(true, name)));
+		return new Chain(new RuleData(true, name));
 	}
 
 	@Override
-	public Rule visitId(IdContext ctx) {
-		return new Rule(new RuleDataAutomaton(new AutomatonData(false, ctx.getText())));
+	public Chain visitId(IdContext ctx) {
+		return new Chain(new RuleData(false, ctx.getText()));
 	}
 
 	@Override
-	public Rule visitElementsLeft(ElementsLeftContext ctx) {
-		Rule rule = new Rule();
+	public Chain visitElementsLeft(ElementsLeftContext ctx) {
+		Chain rule = new Chain();
 		for (ParseTree child : ctx.children){
-			Rule childRule = visit(child);
+			Chain childRule = visit(child);
 			if (childRule != null) {
 				rule.concat(childRule);
 			}
@@ -48,8 +47,8 @@ public class RulesPerformer extends RulesBaseVisitor<Rule>
 	}
 
 	@Override
-	public Rule visitElementLeft(ElementLeftContext ctx) {
-		Rule rule = visit(ctx.element);
+	public Chain visitElementLeft(ElementLeftContext ctx) {
+		Chain rule = visit(ctx.element);
 		
 		if (ctx.addition != null) {
 			switch (ctx.addition.getText()) {
@@ -73,24 +72,24 @@ public class RulesPerformer extends RulesBaseVisitor<Rule>
 	}
 
 	@Override
-	public Rule visitSimpleElementLeft(SimpleElementLeftContext ctx) {
+	public Chain visitSimpleElementLeft(SimpleElementLeftContext ctx) {
 		return visit(ctx.element1 != null ? ctx.element1 : ctx.element2);
 	}
 
 	@Override
-	public Rule visitSimpleRule(SimpleRuleContext ctx) {
-		Rule rule = visit(ctx.left);
-		Rule chain = visit(ctx.right);
+	public Chain visitSimpleRule(SimpleRuleContext ctx) {
+		Chain rule = visit(ctx.left);
+		Chain chain = visit(ctx.right);
 		rule.setChain(chain);
 		rules.add(rule);
 		return rule;
 	}
 
 	@Override
-	public Rule visitElementsRight(ElementsRightContext ctx) {
-		Rule rule = new Rule();
+	public Chain visitElementsRight(ElementsRightContext ctx) {
+		Chain rule = new Chain();
 		for (ParseTree child : ctx.children){
-			Rule childRule = visit(child);
+			Chain childRule = visit(child);
 			if (childRule != null) {
 				rule.concat(childRule);
 			}
@@ -100,15 +99,15 @@ public class RulesPerformer extends RulesBaseVisitor<Rule>
 	}
 
 	@Override
-	public Rule visitElementRight(ElementRightContext ctx) {
-		Rule result = visit(ctx.element);
+	public Chain visitElementRight(ElementRightContext ctx) {
+		Chain result = visit(ctx.element);
 		if (ctx.block != null) {
 			result.comment = ctx.block.getText();
 		}
 		return result;
 	}
 
-	public Iterable<Rule> getRules(ParseTree tree) {
+	public Iterable<Chain> getRules(ParseTree tree) {
 		rules.clear();
 		visit(tree);
 		return rules;

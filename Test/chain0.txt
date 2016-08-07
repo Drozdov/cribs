@@ -1,0 +1,4 @@
+digraph g {
+A0 -> A1 [label = "_EPS"]
+A1 -> A2 [label = "own sides"]
+}

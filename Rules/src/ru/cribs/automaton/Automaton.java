@@ -2,13 +2,13 @@ package ru.cribs.automaton;
 
 public class Automaton {
 	
-	private Node<AutomatonData> startNode = new Node<>();
+	private Node startNode = new Node();
 	
-	public void union(Node<AutomatonData> node) {
-		startNode = new Uniter<AutomatonData>().unite(startNode, node);
+	public void union(Node node) {
+		startNode = new Uniter().unite(startNode, node);
 	}
 	
-	public Node<AutomatonData> getStart() {
+	public Node getStart() {
 		return startNode;
 	}
 }

@@ -6,39 +6,39 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class Uniter<T> {
+public class Uniter {
 	
 	// Yeah, map inside another map seems to be rather complicated, but what to do?
-	// Node<T> -> (Node<T> -> Node<T>)
-	private Map<Node<T>, Map<Node<T>, Node<T>>> map;
+	// Node -> (Node -> Node)
+	private Map<Node, Map<Node, Node>> map;
 	
-	public Node<T> unite(Node<T> node1, Node<T> node2) {
+	public Node unite(Node node1, Node node2) {
 		map = new HashMap<>();
-		Node<T> result = new Node<T>();
+		Node result = new Node();
 		unite(result, node1, node2, MagicGenerator.generateMagic());
 		return result;
 	}
 	
-	private Node<T> getUnion(Node<T> node1, Node<T> node2) {
+	private Node getUnion(Node node1, Node node2) {
 		if (!map.containsKey(node1)) {
 			map.put(node1, new HashMap<>());
 		}
-		Map<Node<T>, Node<T>> map2 = map.get(node1);
+		Map<Node, Node> map2 = map.get(node1);
 		if (!map2.containsKey(node2)) {
-			Node<T> node = new Node<>();
+			Node node = new Node();
 			map2.put(node2, node);
 		}
 		return map2.get(node2);
 	}
 	
-	private void unite(Node<T> current, Node<T> node1, Node<T> node2, int magic) {
-		Set<T> commonData = new HashSet<>(node1.getRulesData());
+	private void unite(Node current, Node node1, Node node2, int magic) {
+		Set<RuleData> commonData = new HashSet<>(node1.getRulesData());
 		commonData.retainAll(node2.getRulesData());
 		
-		for (T data : commonData) {
-			Node<T> nd1 = node1.getRule(data);
-			Node<T> nd2 = node2.getRule(data);
-			Node<T> united = getUnion(nd1, nd2);
+		for (RuleData data : commonData) {
+			Node nd1 = node1.getRule(data);
+			Node nd2 = node2.getRule(data);
+			Node united = getUnion(nd1, nd2);
 			current.rules.put(data, united);
 			
 			if (united.magic == magic) {
@@ -48,15 +48,15 @@ public class Uniter<T> {
 			unite(united, nd1, nd2, magic);
 		}
 		
-		Collection<T> data1 = node1.getRulesData();
-		Collection<T> data2 = node2.getRulesData();
+		Collection<RuleData> data1 = node1.getRulesData();
+		Collection<RuleData> data2 = node2.getRulesData();
 		data1.removeAll(commonData);
 		data2.removeAll(commonData);
 		
-		for (T data : data1) {
+		for (RuleData data : data1) {
 			current.rules.put(data, node1.getRule(data));
 		}
-		for (T data : data2) {
+		for (RuleData data : data2) {
 			current.rules.put(data, node2.getRule(data));
 		}
 		

@@ -5,7 +5,7 @@ import java.io.FileReader;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 
-import ru.cribs.automaton.Rule;
+import ru.cribs.automaton.Chain;
 
 public class Runner {
 	public static void main(String[] args) throws Exception {
@@ -18,9 +18,9 @@ public class Runner {
 
 		ParseTree tree = parser.rules();
 		
-		Iterable<Rule> rules = chainsGetter.getRules(tree);
+		Iterable<Chain> rules = chainsGetter.getRules(tree);
 		
-		for (Rule rule : rules) {
+		for (Chain rule : rules) {
 			System.out.println(rule);
 		}
 	}
