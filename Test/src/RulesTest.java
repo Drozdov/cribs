@@ -20,10 +20,10 @@ import ru.cribs.rules.RulesPerformer;
 public class RulesTest {
 		
 	@Test
-	public void test2() {
+	public void test1() {
 		Chain chain = new Chain(new RuleData(true, "abc"));
-		Node node = chain.toAutomaton();
-		//Node node = chain.nodeStart;
+		Node node = chain.nodeStart;
+		chain.setChain(new Chain());
 		Automaton automaton = new Automaton();
 		automaton.union(node);
 		boolean res = automaton.getStart().test(new RuleData[] { new RuleData(true, "abc") });
@@ -33,7 +33,7 @@ public class RulesTest {
 	}
 	
 	@Test
-	public void test3() throws FileNotFoundException, IOException {
+	public void test2() throws FileNotFoundException, IOException {
 		ANTLRInputStream input = new ANTLRInputStream(new FileReader("rules.in"));
 		RulesLexer lexer = new RulesLexer(input);
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
