@@ -20,7 +20,7 @@ public class Node {
 	}
 	
 	protected Map<RuleData, Node> rules = new HashMap<>();
-	protected boolean isTermainal;
+	public boolean isTermainal;
 	protected int magic;
 	
 	public static Node create(Iterator<RuleData> values) {

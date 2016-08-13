@@ -3,11 +3,16 @@ package ru.cribs.automaton;
 public class RuleData {
 	private final boolean isString;
 	private final String name;
-	public String comment;
+	private final String comment;
 	
-	public RuleData(boolean isString, String name) {
+	public RuleData(boolean isString, String name, String comment) {
 		this.isString = isString;
 		this.name = name;
+		this.comment = comment;
+	}
+	
+	public RuleData(boolean isString, String name) {
+		this(isString, name, null);
 	}
 
 	public boolean isString() {
@@ -16,6 +21,10 @@ public class RuleData {
 
 	public String getName() {
 		return name;
+	}
+	
+	public String getComment() {
+		return comment;
 	}
 
 	@Override
@@ -35,8 +44,6 @@ public class RuleData {
 	@Override
 	public String toString() {
 		return name;
-	}
-	
-	
+	}	
 	
 }

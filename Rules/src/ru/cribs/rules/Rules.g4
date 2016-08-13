@@ -10,19 +10,17 @@ simpleRule : left=elementsLeft '->' right=elementsRight ';';
 
 stringLiteral : StringLiteral;
 
-id : ID;
+id : name=ID block=Block?;
 
-simpleElement: stringLiteral | id ;
+simpleElement: stringLiteral | id;
 
 elementsLeft : elementLeft+;
 
-elementsRight : elementRight+;
+elementsRight : simpleElement+;
 
 elementLeft : (identifier=ID ':')? element=simpleElementLeft addition=('+'|'*'|'?')?;
 
 simpleElementLeft : element1=simpleElement | '(' element2=elementsLeft ')';
-
-elementRight : element=simpleElement block=Block? ;
 
 // Lexer
 CharacterLiteral :  '\'' (PrintableChar | CharEscapeSeq) '\'';

@@ -5,7 +5,7 @@ import java.io.FileReader;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 
-import ru.cribs.automaton.Chain;
+import ru.cribs.automaton.Automaton;
 
 public class Runner {
 	public static void main(String[] args) throws Exception {
@@ -14,14 +14,10 @@ public class Runner {
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 		RulesParser parser = new RulesParser(tokens);
 
-		RulesPerformer chainsGetter = new RulesPerformer();
+		Automaton automaton = new Automaton();
+		RulesPerformer chainsGetter = new RulesPerformer(automaton);
 
 		ParseTree tree = parser.rules();
-		
-		Iterable<Chain> rules = chainsGetter.getRules(tree);
-		
-		for (Chain rule : rules) {
-			System.out.println(rule);
-		}
+		chainsGetter.parse(tree);
 	}
 }

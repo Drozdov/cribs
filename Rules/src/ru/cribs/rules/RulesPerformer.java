@@ -1,14 +1,11 @@
 package ru.cribs.rules;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.antlr.v4.runtime.tree.ParseTree;
 
-import ru.cribs.automaton.RuleData;
+import ru.cribs.automaton.Automaton;
 import ru.cribs.automaton.Chain;
+import ru.cribs.automaton.RuleData;
 import ru.cribs.rules.RulesParser.ElementLeftContext;
-import ru.cribs.rules.RulesParser.ElementRightContext;
 import ru.cribs.rules.RulesParser.ElementsLeftContext;
 import ru.cribs.rules.RulesParser.ElementsRightContext;
 import ru.cribs.rules.RulesParser.IdContext;
@@ -19,7 +16,11 @@ import ru.cribs.rules.RulesParser.StringLiteralContext;
 public class RulesPerformer extends RulesBaseVisitor<Chain>
 {
 	
-	private final List<Chain> rules = new ArrayList<>();
+	private final Automaton automaton;
+	
+	public RulesPerformer(Automaton automaton) {
+		this.automaton = automaton;
+	}
 
 	@Override
 	public Chain visitStringLiteral(StringLiteralContext ctx) {
@@ -30,7 +31,8 @@ public class RulesPerformer extends RulesBaseVisitor<Chain>
 
 	@Override
 	public Chain visitId(IdContext ctx) {
-		return new Chain(new RuleData(false, ctx.getText()));
+		return new Chain(new RuleData(false, ctx.name.getText(),
+				ctx.block != null ? ctx.block.getText() : null));
 	}
 
 	@Override
@@ -80,8 +82,7 @@ public class RulesPerformer extends RulesBaseVisitor<Chain>
 	public Chain visitSimpleRule(SimpleRuleContext ctx) {
 		Chain rule = visit(ctx.left);
 		Chain chain = visit(ctx.right);
-		rule.setChain(chain);
-		rules.add(rule);
+		automaton.addRule(rule, chain);
 		return rule;
 	}
 
@@ -97,20 +98,9 @@ public class RulesPerformer extends RulesBaseVisitor<Chain>
 
 		return rule;
 	}
-
-	@Override
-	public Chain visitElementRight(ElementRightContext ctx) {
-		Chain result = visit(ctx.element);
-		if (ctx.block != null) {
-			result.comment = ctx.block.getText();
-		}
-		return result;
-	}
-
-	public Iterable<Chain> getRules(ParseTree tree) {
-		rules.clear();
+	
+	public void parse(ParseTree tree) {
 		visit(tree);
-		return rules;
 	}
 		
 }

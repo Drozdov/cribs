@@ -23,7 +23,7 @@ public class RulesTest {
 	public void test1() {
 		Chain chain = new Chain(new RuleData(true, "abc"));
 		Node node = chain.nodeStart;
-		chain.setChain(new Chain());
+		chain.nodeEnd.isTermainal = true;
 		Automaton automaton = new Automaton();
 		automaton.union(node);
 		boolean res = automaton.getStart().test(new RuleData[] { new RuleData(true, "abc") });
@@ -39,17 +39,9 @@ public class RulesTest {
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 		RulesParser parser = new RulesParser(tokens);
 
-		RulesPerformer chainsGetter = new RulesPerformer();
-
 		ParseTree tree = parser.rules();
-		
-		Iterable<Chain> chains = chainsGetter.getRules(tree);
-		
 		Automaton automaton = new Automaton();
-		for (Chain chain : chains) {
-			//Node automatonNode = chain.toAutomaton();
-			automaton.union(chain.nodeStart);
-		}
+		new RulesPerformer(automaton).parse(tree);
 		
 		boolean resTrue = automaton.getStart().test(new RuleData[] {
 				new RuleData(true, "own sides")

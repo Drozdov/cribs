@@ -9,8 +9,6 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import ru.cribs.automaton.Automaton;
-import ru.cribs.automaton.Chain;
-import ru.cribs.automaton.Node;
 import ru.cribs.rules.RulesLexer;
 import ru.cribs.rules.RulesParser;
 import ru.cribs.rules.RulesPerformer;
@@ -27,19 +25,11 @@ public class VisualGraphTest {
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 		RulesParser parser = new RulesParser(tokens);
 
-		RulesPerformer chainsGetter = new RulesPerformer();
+		Automaton automaton = new Automaton();
+		RulesPerformer chainsGetter = new RulesPerformer(automaton);
 
 		ParseTree tree = parser.rules();
-		Iterable<Chain> chains = chainsGetter.getRules(tree);
-		
-		Automaton automaton = new Automaton();
-		int i = 0;
-		for (Chain chain : chains) {
-			chain.nodeStart.saveToDot("chain" + i++ + ".txt");
-			Node automatonNode = chain.toAutomaton();
-			automaton.union(automatonNode);
-		}
-		
+		chainsGetter.parse(tree);
 		automaton.getStart().saveToDot("out.dot");
 		
 	}

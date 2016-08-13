@@ -7,8 +7,6 @@ import ru.cribs.automaton.RuleDataEps.DeclarationType;
 public class Chain {
 
 	public ChainNode nodeStart, nodeEnd;
-	private Chain chain;
-	public String comment;
 	
 	public Chain() {
 		nodeStart = nodeEnd = new ChainNode();
@@ -54,18 +52,8 @@ public class Chain {
 		nodeEnd = end;
 
 	}
-	
-	public Chain getChain() {
-		return chain;
-	}
-	
-	public void setChain(Chain chain) {
-		this.chain = chain;
-		nodeEnd.isTermainal = true;
-	}
 
-	@Deprecated
-	public Node toAutomaton() {
+	public Node getWithoutEps() {
 		nodeEnd.isTermainal = true;
 		Node data = new Node();
 		NodesMap map = new NodesMap();
