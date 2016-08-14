@@ -1,5 +1,6 @@
 package ru.cribs.automaton;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -61,6 +62,22 @@ public class ChainNode extends Node {
 			
 		}
 		
+		return result;
+	}
+	
+	public List<RuleDataEps> getEpsRulesSkipped(RuleData item) {
+		List<RuleDataEps> result = null;
+		for (Entry<RuleDataEps, ChainNode> data : eps.entrySet()) {
+			List<RuleDataEps> res = data.getValue().getEpsRulesSkipped(item);
+			if (res != null) {
+				result = res;
+				result.add(data.getKey());
+				break;
+			}
+		}
+		if (result == null && rules.containsKey(item)) {
+			result = new ArrayList<>();
+		}
 		return result;
 	}
 

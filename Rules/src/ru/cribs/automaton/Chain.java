@@ -1,6 +1,9 @@
 package ru.cribs.automaton;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import ru.cribs.automaton.RuleDataEps.DeclarationType;
 
@@ -52,8 +55,43 @@ public class Chain {
 		nodeEnd = end;
 
 	}
+	
+	public Map<String, List<RuleData>> getVariables(Iterable<RuleData> datas) {
+		Map<String, List<RuleData>> result = new HashMap<String, List<RuleData>>();
+		Map<String, List<RuleData>> temp = new HashMap<String, List<RuleData>>();
+		Node node = nodeStart;
+		for (RuleData data : datas) {
+			Node next = node.getRule(data);
+			
+			for (List<RuleData> filling : temp.values()) {
+				filling.add(data);
+			}
+			
+			if (next == null)
+				return null;
+			if (node instanceof ChainNode) {
+				ChainNode chainNode = (ChainNode) node;
+				List<RuleDataEps> eps = chainNode.getEpsRulesSkipped(data);
+				for (RuleDataEps epsData : eps) {
+					switch (epsData.declType) {
+					case BEGIN:
+						temp.put(epsData.name, new ArrayList<>());
+						break;
+					case END:
+						List<RuleData> list = temp.get(epsData.name);
+						result.put(epsData.name, list);
+						break;
+					default:
+						break;
+					}
+				}
+			}
+			node = next;
+		}
+		return result;
+	}
 
-	public Node getWithoutEps() {
+	public HashMap<Node, Node> getWithoutEps() {
 		nodeEnd.isTermainal = true;
 		Node data = new Node();
 		NodesMap map = new NodesMap();
@@ -69,7 +107,7 @@ public class Chain {
 				automatonNode.rules.put(curData, automatonNode2);
 			}
 		}
-		return data;
+		return map;
 	}
 	
 	private class NodesMap extends HashMap<Node, Node> {
