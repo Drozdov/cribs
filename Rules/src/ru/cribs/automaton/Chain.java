@@ -75,7 +75,7 @@ public class Chain {
 				for (RuleDataEps epsData : eps) {
 					switch (epsData.declType) {
 					case BEGIN:
-						temp.put(epsData.name, new ArrayList<>());
+						temp.put(epsData.name, new ArrayList<RuleData>());
 						break;
 					case END:
 						List<RuleData> list = temp.get(epsData.name);
