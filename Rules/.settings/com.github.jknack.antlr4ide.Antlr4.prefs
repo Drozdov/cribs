@@ -1,5 +1,5 @@
-antlr4.antlrRegisteredTools=4.4@C\:\\Users\\Vladimir\\AppData\\Local\\Temp\\antlr-4.4-complete.jar\:null@C\:\\workspaces\\cribs\\Rules\\antlr-4.5.1-complete.jar
-antlr4.antlrToolPath=C\:\\workspaces\\cribs\\Rules\\antlr-4.5.1-complete.jar
+antlr4.antlrRegisteredTools=null@antlr-4.5.1-complete.jar
+antlr4.antlrToolPath=antlr-4.5.1-complete.jar
 antlr4.encoding=UTF-8
 antlr4.listener=true
 antlr4.visitor=true

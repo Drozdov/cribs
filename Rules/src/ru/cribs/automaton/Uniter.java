@@ -21,7 +21,7 @@ public class Uniter {
 	
 	private Node getUnion(Node node1, Node node2) {
 		if (!map.containsKey(node1)) {
-			map.put(node1, new HashMap<>());
+			map.put(node1, new HashMap<Node, Node>());
 		}
 		Map<Node, Node> map2 = map.get(node1);
 		if (!map2.containsKey(node2)) {
