@@ -56,8 +56,8 @@ public class ChainNode extends Node {
 				toVisit.add(data.getValue());
 			}
 			
-			for (Entry<RuleData, Node> data : node.rules.entrySet()) {
-				result.rules.put(data.getKey(), data.getValue());
+			for (Entry<RuleData, Node> data : node.edges.entrySet()) {
+				result.edges.put(data.getKey(), data.getValue());
 			}
 			
 		}
@@ -75,7 +75,7 @@ public class ChainNode extends Node {
 				break;
 			}
 		}
-		if (result == null && rules.containsKey(item)) {
+		if (result == null && edges.containsKey(item)) {
 			result = new ArrayList<>();
 		}
 		return result;
@@ -83,7 +83,7 @@ public class ChainNode extends Node {
 
 	public ChainNode add(RuleData data) {
 		ChainNode node = new ChainNode();
-		rules.put(data, node);
+		edges.put(data, node);
 		return node;
 	}
 	

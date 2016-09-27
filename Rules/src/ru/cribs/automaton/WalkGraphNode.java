@@ -1,17 +1,15 @@
 package ru.cribs.automaton;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-public class WalkGraphNode {
+import ru.cribs.helpers.ConcatIterable;
+
+public class WalkGraphNode extends AbstractNode<WalkGraphNode> {
 	
-	public Map<RuleData, WalkGraphNode> edges = new HashMap<>();
 	public Set<Node> reduced = new HashSet<>();
 	
 	public boolean tryReduce(Automaton automaton) {
@@ -49,38 +47,5 @@ public class WalkGraphNode {
 			current = node;
 		}
 	}
-	
-	private class ConcatIterable<T> implements Iterable<T> {
 
-		private final Iterable<T> base;
-		private final T newElement;
-		
-		public ConcatIterable(Iterable<T> base, T newElement) {
-			this.base = base;
-			this.newElement = newElement;
-		}
-		
-		@Override
-		public Iterator<T> iterator() {
-			return new Iterator<T>() {
-
-				private final Iterator<T> baseIterator = base.iterator();
-				private boolean newElementUsed;
-				
-				@Override
-				public boolean hasNext() {
-					return baseIterator.hasNext() || !newElementUsed;
-				}
-
-				@Override
-				public T next() {
-					if (baseIterator.hasNext())
-						return baseIterator.next();
-					newElementUsed = true;
-					return newElement;
-				}
-			};
-		}
-		
-	}
 }

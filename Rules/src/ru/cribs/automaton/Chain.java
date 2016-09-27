@@ -18,7 +18,7 @@ public class Chain {
 	public Chain(RuleData data) {
 		nodeStart = new ChainNode();
 		nodeEnd = new ChainNode();
-		nodeStart.rules.put(data, nodeEnd);
+		nodeStart.edges.put(data, nodeEnd);
 	}
 	
 	public void concat(Chain chain) {
@@ -104,7 +104,7 @@ public class Chain {
 			for (RuleData curData : node.getRulesData()) {
 				Node rule = node.getRule(curData);
 				Node automatonNode2 = map.getSafe(rule);
-				automatonNode.rules.put(curData, automatonNode2);
+				automatonNode.edges.put(curData, automatonNode2);
 			}
 		}
 		return map;

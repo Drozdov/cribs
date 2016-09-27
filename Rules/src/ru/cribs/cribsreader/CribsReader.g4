@@ -1,6 +1,3 @@
-/**
- * Define a grammar called Hello
- */
 grammar CribsReader;
 startRule  : simpleRule* ;
 

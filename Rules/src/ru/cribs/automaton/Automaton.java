@@ -46,7 +46,7 @@ public class Automaton {
 			List<RuleData> result = new ArrayList<>();
 			
 			for (Node node : destChain.nodeStart.getAllDescendents()) {
-				for (RuleData data : node.rules.keySet()) {
+				for (RuleData data : node.edges.keySet()) {
 					String name = data.getName();
 					if (!data.isString() && variables.containsKey(name)) {
 						result.addAll(variables.get(name));

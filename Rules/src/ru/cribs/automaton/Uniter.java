@@ -39,7 +39,7 @@ public class Uniter {
 			Node nd1 = node1.getRule(data);
 			Node nd2 = node2.getRule(data);
 			Node united = getUnion(nd1, nd2);
-			current.rules.put(data, united);
+			current.edges.put(data, united);
 			
 			if (united.magic == magic) {
 				continue;
@@ -54,10 +54,10 @@ public class Uniter {
 		data2.removeAll(commonData);
 		
 		for (RuleData data : data1) {
-			current.rules.put(data, node1.getRule(data));
+			current.edges.put(data, node1.getRule(data));
 		}
 		for (RuleData data : data2) {
-			current.rules.put(data, node2.getRule(data));
+			current.edges.put(data, node2.getRule(data));
 		}
 		
 		current.isTermainal = node1.isTermainal || node2.isTermainal;
